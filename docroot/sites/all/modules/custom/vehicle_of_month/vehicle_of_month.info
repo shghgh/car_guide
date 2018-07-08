@@ -1,0 +1,9 @@
+name = Vehicle of month
+description = Add a configurable block for the vehicle of month
+core = 7.x
+package = carGuide
+version = 0.1-dev
+dependencies[] = block
+
+; configuration
+ configure = admin/config/month-vehicle

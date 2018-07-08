@@ -1,0 +1,78 @@
+<?php
+
+/*
+ * Setting up menu for block hook_block_info()
+ */
+function vehicle_of_month_block_info() {
+    $blocks['vehicle_of_month_block'] = array(
+        'info' => t('Vehicle of the month'),
+    );
+    
+    return $blocks;
+}
+
+/*
+ * Setting up menu for block hook_menu()
+ */
+function vehicle_of_month_menu() {
+    
+    $items = array();
+    
+    $items['admin/config/month-vehicle'] = array(
+        'title' => 'Setting for Vehicle of the month',
+        'description' => '',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('vehicle_of_month_form'),
+        'access arguments' => array('administer permissions'),
+        'position' => 'left',
+        'weight' => -30,
+        'file' => 'vehicle_of_month.admin.inc',
+    );
+
+    return $items;
+}
+
+/*
+ * Setting map blocks content hook_block_view()
+ */
+
+function vehicle_of_month_block_view( $delta ='' ) {
+    $block = array();
+    switch ( $delta ){
+        case 'vehicle_of_month_block':
+            $block = array(
+            'content' => theme('vehicle_of_month_block',
+                array(  'vom_name'  => variable_get( 'cg_vehicle_name', '' ),
+                'vom_image' => create_image_path(variable_get('cg_vehicle_image', '')),
+                    'vom_url'   => variable_get( 'cg_vehicle_url', '' ))),
+                    );
+            break;
+    }
+    return $block;
+}
+
+/*
+ * Setting up template files hook_theme()
+ */
+function vehicle_of_month_theme() {
+    $theme = array();
+    $theme['vehicle_of_month_block'] = array(
+        'template' => 'vehicle-of-month-block'
+    );
+    return $theme;
+}
+
+/*
+ * Make image path
+ */
+
+function create_image_path($file_id) {
+    $image_file = file_load($file_id);
+    $image_path = '';
+    
+    if (isset($image_file->uri)) {
+        $image_path = file_create_url($image_file->uri);
+    }
+    return $image_path;
+}
+
